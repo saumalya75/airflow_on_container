@@ -2,19 +2,20 @@
 
 TRY_LOOP="20"
 
-: "${REDIS_HOST:="airflow-reds.fvgd9u.ng.0001.use1.cache.amazonaws.com"}"
-: "${REDIS_PORT:="6379"}"
+: "${REDIS_HOST:="REDIS_HOST_NAME"}"
+: "${REDIS_PORT:="REDIS_POST_NUMBER"}"
 : "${REDIS_PASSWORD:=""}"
 
-: "${POSTGRES_HOST:="airflow-meta-db.clalhfeq3qmj.us-east-1.rds.amazonaws.com"}"
-: "${POSTGRES_PORT:="5432"}"
-: "${POSTGRES_USER:="airflow"}"
-: "${POSTGRES_PASSWORD:="Askme4!75"}"
-: "${POSTGRES_DB:="airflow"}"
+: "${POSTGRES_HOST:="<POSTGRES_HOST_NAME"}"
+: "${POSTGRES_PORT:="<POSTGRES_PORT_NUMBER>"}"
+: "${POSTGRES_USER:="<POSTGRES_USER_NAME>"}"
+: "${POSTGRES_PASSWORD:="<POSTGRES_PASSWORD>"}"
+: "${POSTGRES_DB:="<POSTGRES_DATABASE>"}"
 
 # Defaults and back-compat
 : "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)")}}"
 #: "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:-Sequential}Executor}"
+#: "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
 : "${AIRFLOW__CORE__EXECUTOR:=LocalExecutor}"
 
 

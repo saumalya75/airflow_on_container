@@ -98,7 +98,7 @@ secret.md
 script/create-user.py
 script/entrypoint.sh
 
-script/*
+*.yml
 
 
 

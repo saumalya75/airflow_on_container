@@ -51,12 +51,13 @@ RUN set -ex \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
     && useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow \
-    && pip install -U pip setuptools wheel \
+    && pip install -U pip==19.0.1 setuptools==40.7.0 wheel==0.32.3 \
+    && pip install pytz==2018.9  \
+    && pip install pyOpenSSL==19.0.0 \
+    && pip install ndg-httpsclient==0.5.1 \
+    && pip install pyasn1==0.4.5 \
+    && pip install psycopg2==2.7.7 \
     && pip install Cython \
-    && pip install pytz \
-    && pip install pyOpenSSL \
-    && pip install ndg-httpsclient \
-    && pip install pyasn1 \
     && pip install apache-airflow[crypto,celery,postgres,password,s3,slack,redis]==$AIRFLOW_VERSION \
     && pip install celery[redis]==4.0.2 \
     && apt-get purge --auto-remove -yqq $buildDeps \
