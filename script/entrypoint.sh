@@ -2,9 +2,9 @@
 
 TRY_LOOP="20"
 
-: "${REDIS_HOST:="airflow-reds.fvgd9u.ng.0001.use1.cache.amazonaws.com"}"
+#: "${REDIS_HOST:="airflow-reds.fvgd9u.ng.0001.use1.cache.amazonaws.com"}"
 : "${REDIS_PORT:="6379"}"
-: "${REDIS_PASSWORD:=""}"
+: "${REDIS_PASSWORD:="sOmE_sEcUrE_pAsS"}"
 
 : "${POSTGRES_HOST:="airflow-meta-db.clalhfeq3qmj.us-east-1.rds.amazonaws.com"}"
 : "${POSTGRES_PORT:="5432"}"
@@ -15,7 +15,7 @@ TRY_LOOP="20"
 # Defaults and back-compat
 : "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)")}}"
 #: "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:-Sequential}Executor}"
-: "${AIRFLOW__CORE__EXECUTOR:=LocalExecutor}"
+: "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
 
 
 # Load DAGs exemples (default: Yes)
