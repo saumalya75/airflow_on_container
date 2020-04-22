@@ -6,7 +6,6 @@
 
 FROM python:3.6-slim
 MAINTAINER Puckel_
-
 # Never prompts the user for choices on installation/configuration of packages
 ENV DEBIAN_FRONTEND noninteractive
 ENV TERM linux
