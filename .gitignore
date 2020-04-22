@@ -97,8 +97,6 @@ secret.md
 
 script/create-user.py
 script/entrypoint.sh
-
-*.yml
-
+docker-compose-with-redis.yml
 
 

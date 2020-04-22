@@ -2,21 +2,20 @@
 
 TRY_LOOP="20"
 
-: "${REDIS_HOST:="REDIS_HOST_NAME"}"
-: "${REDIS_PORT:="REDIS_POST_NUMBER"}"
+#: "${REDIS_HOST:="airflow-reds.fvgd9u.ng.0001.use1.cache.amazonaws.com"}"
+: "${REDIS_PORT:="6379"}"
 : "${REDIS_PASSWORD:=""}"
 
-: "${POSTGRES_HOST:="<POSTGRES_HOST_NAME"}"
-: "${POSTGRES_PORT:="<POSTGRES_PORT_NUMBER>"}"
-: "${POSTGRES_USER:="<POSTGRES_USER_NAME>"}"
-: "${POSTGRES_PASSWORD:="<POSTGRES_PASSWORD>"}"
+: "${POSTGRES_HOST:="<POSTGRES_DB_HOST>"}"
+: "${POSTGRES_PORT:="5432"}"
+: "${POSTGRES_USER:="<POSTGRES_DB_USER>"}"
+: "${POSTGRES_PASSWORD:="<POSTGRES_DB_PASSWORD>"}"
 : "${POSTGRES_DB:="<POSTGRES_DATABASE>"}"
 
 # Defaults and back-compat
-: "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print(FERNET_KEY)")}}"
+: "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:="Td6T3o3k-IP7uyCH6OWoAAkntg1tpT9-4pbXBKmA_ck="}}"
 #: "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:-Sequential}Executor}"
-#: "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
-: "${AIRFLOW__CORE__EXECUTOR:=LocalExecutor}"
+: "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
 
 
 # Load DAGs exemples (default: Yes)
@@ -55,6 +54,10 @@ wait_for_redis() {
   if [ "$AIRFLOW__CORE__EXECUTOR" = "CeleryExecutor" ]
   then
     wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "Redis connected at $REDIS_HOST $REDIS_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    sleep 10
   fi
 }
 
@@ -76,11 +79,11 @@ case "$1" in
     wait_for_redis
     airflow initdb
     python /create-user.py
-    #if [ "$AIRFLOW__CORE__EXECUTOR" = "LocalExecutor" ];
-    #then
+    if [ "$AIRFLOW__CORE__EXECUTOR" = "SequentialExecutor" ] || [ "$AIRFLOW__CORE__EXECUTOR" = "LocalExecutor" ];
+    then
       # With the "Local" executor it should all run in one container.
       airflow scheduler &
-    #fi
+    fi
     exec airflow webserver
     ;;
   worker|scheduler)
