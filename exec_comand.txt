@@ -1,2 +1,2 @@
-docker run -p 8080:8080 saumalya75/airflowonaws webserver
+docker-compose -f docker-compose-celeryexecutor.yml up
 

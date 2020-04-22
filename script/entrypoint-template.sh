@@ -2,7 +2,7 @@
 
 TRY_LOOP="20"
 
-#: "${REDIS_HOST:="airflow-reds.fvgd9u.ng.0001.use1.cache.amazonaws.com"}"
+#: "${REDIS_HOST:="<REDIS_HOST>"}"
 : "${REDIS_PORT:="6379"}"
 : "${REDIS_PASSWORD:=""}"
 
@@ -76,6 +76,9 @@ export \
 case "$1" in
   webserver)
     wait_for_port "Postgres" "$POSTGRES_HOST" "$POSTGRES_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "Postgres connected at $POSTGRES_HOST $POSTGRES_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     wait_for_redis
     airflow initdb
     python /create-user.py
@@ -88,6 +91,9 @@ case "$1" in
     ;;
   worker|scheduler)
     wait_for_port "Postgres" "$POSTGRES_HOST" "$POSTGRES_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "Postgres connected at $POSTGRES_HOST $POSTGRES_PORT"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     wait_for_redis
     # To give the webserver time to run initdb.
     sleep 10
