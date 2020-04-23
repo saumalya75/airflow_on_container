@@ -20,7 +20,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: airflowonaws-postgresaddition:test
+        image: saumalya75/airflowonaws:2.1.0
         build: .
         restart: always
         depends_on:
@@ -52,7 +52,7 @@ services:
             retries: 3
 
     flower:
-        image: airflowonaws-postgresaddition:test
+        image: saumalya75/airflowonaws:2.1.0
         build: .
         restart: always
         depends_on:
@@ -75,7 +75,7 @@ services:
         command: flower
 
     scheduler:
-        image: airflowonaws-postgresaddition:test
+        image: saumalya75/airflowonaws:2.1.0
         build: .
         restart: always
         depends_on:
@@ -99,7 +99,7 @@ services:
         command: scheduler
 
     worker:
-        image: airflowonaws-postgresaddition:test
+        image: saumalya75/airflowonaws:2.1.0
         build: .
         restart: always
         depends_on:
