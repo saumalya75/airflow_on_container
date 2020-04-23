@@ -21,7 +21,6 @@ services:
 
     webserver:
         image: saumalya75/airflowonaws:2.1.0
-        build: .
         restart: always
         depends_on:
             - postgres
@@ -53,7 +52,6 @@ services:
 
     flower:
         image: saumalya75/airflowonaws:2.1.0
-        build: .
         restart: always
         depends_on:
             - redis
@@ -76,7 +74,6 @@ services:
 
     scheduler:
         image: saumalya75/airflowonaws:2.1.0
-        build: .
         restart: always
         depends_on:
             - webserver
@@ -100,7 +97,6 @@ services:
 
     worker:
         image: saumalya75/airflowonaws:2.1.0
-        build: .
         restart: always
         depends_on:
             - scheduler

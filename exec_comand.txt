@@ -1,2 +1,4 @@
-docker-compose -f docker-compose-celeryexecutor.yml up
+docker-compose up
+
+WebUI: http://0.0.0.0:8080
 
