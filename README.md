@@ -12,11 +12,14 @@ This application gives you an end to end setup of airflow (ready to launch) usin
 
 ## 2. Pre-requisite:
 Not much, just a few things:
+
 1. Install (if not installed already) latest version of [Docker and Docker-compose](https://docs.docker.com) installed in your system.
+
 2. Install (if not installed already) latest version of [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 ## Getting the application/code:
 **Easy-peasy!**
+
 The entire project is available on my BitBucket repository  **`https://bitbucket.org/saumalya75/airflowonaws/src/master/`** can be cloned using **`git clone git@bitbucket.org:saumalya75/airflowonaws.git`**.
 
 ## 3. Usage:
