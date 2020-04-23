@@ -4,36 +4,42 @@ services:
         image: 'redis:5.0.5'
         ports:
             - "6379:6379"
-        command: redis-server #--requirepass redispass
+        command: redis-server --requirepass ${V_REDIS_PASSWORD}
 
-    # postgres:
-    #     image: postgres:9.6
-    #     environment:
-    #         - POSTGRES_USER=airflow
-    #         - POSTGRES_PASSWORD=airflow
-    #         - POSTGRES_DB=airflow
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
         # Uncomment these lines to persist data on the local filesystem.
-        #     - PGDATA=/var/lib/postgresql/data/pgdata
-        # volumes:
-        #     - ./pgdata:/var/lib/postgresql/data/pgdata
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowonaws:1.0.0
+        image: airflowonaws-postgresaddition:test
+        build: .
         restart: always
         depends_on:
-            # - postgres
+            - postgres
             - redis
         environment:
-            - LOAD_EX=n
-            - FERNET_KEY=Td6T3o3k-IP7uyCH6OWoAAkntg1tpT9-4pbXBKmA_ck=
-            - EXECUTOR=Celeryd
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
             - REDIS_HOST=redis
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
-            # - REDIS_PASSWORD=redispass
-        # volumes:
-        #     - ./dags:/usr/local/airflow/dags
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
+        volumes:
+            - ./airflow_home/dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         ports:
@@ -46,53 +52,72 @@ services:
             retries: 3
 
     flower:
-        image: saumalya75/airflowonaws:1.0.0
+        image: airflowonaws-postgresaddition:test
+        build: .
         restart: always
         depends_on:
             - redis
+            - postgres
         environment:
-            - EXECUTOR=Celery
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
             - REDIS_HOST=redis
-            # - REDIS_PASSWORD=redispass
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
         ports:
             - "5555:5555"
         command: flower
 
     scheduler:
-        image: saumalya75/airflowonaws:1.0.0
+        image: airflowonaws-postgresaddition:test
+        build: .
         restart: always
         depends_on:
             - webserver
-        # volumes:
-        #     - ./dags:/usr/local/airflow/dags
+        volumes:
+            - ./airflow_home/dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         environment:
-            - LOAD_EX=n
-            - FERNET_KEY=Td6T3o3k-IP7uyCH6OWoAAkntg1tpT9-4pbXBKmA_ck=
-            - EXECUTOR=Celery
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
             - REDIS_HOST=redis
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
-            # - REDIS_PASSWORD=redispass
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
         command: scheduler
 
     worker:
-        image: saumalya75/airflowonaws:1.0.0
+        image: airflowonaws-postgresaddition:test
+        build: .
         restart: always
         depends_on:
             - scheduler
-        # volumes:
-        #     - ./dags:/usr/local/airflow/dags
+        volumes:
+            - ./airflow_home/dags:/usr/local/airflow/dags
             # Uncomment to include custom plugins
             # - ./plugins:/usr/local/airflow/plugins
         environment:
-            - FERNET_KEY=Td6T3o3k-IP7uyCH6OWoAAkntg1tpT9-4pbXBKmA_ck=
-            - EXECUTOR=Celery
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
             - REDIS_HOST=redis
-            # - POSTGRES_USER=airflow
-            # - POSTGRES_PASSWORD=airflow
-            # - POSTGRES_DB=airflow
-            # - REDIS_PASSWORD=redispass
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
         command: worker

@@ -95,7 +95,9 @@ credentials.md
 .idea
 secret.md
 
+#Files containing configurations
 script/create-user.py
-script/entrypoint.sh
 
+#Database data
+pgdata/*
 

@@ -2,20 +2,10 @@
 
 TRY_LOOP="20"
 
-#: "${REDIS_HOST:="<REDIS_HOST>"}"
-: "${REDIS_PORT:="6379"}"
-: "${REDIS_PASSWORD:=""}"
-
-: "${POSTGRES_HOST:="<POSTGRES_DB_HOST>"}"
-: "${POSTGRES_PORT:="5432"}"
-: "${POSTGRES_USER:="<POSTGRES_DB_USER>"}"
-: "${POSTGRES_PASSWORD:="<POSTGRES_DB_PASSWORD>"}"
-: "${POSTGRES_DB:="<POSTGRES_DATABASE>"}"
-
 # Defaults and back-compat
-: "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:="Td6T3o3k-IP7uyCH6OWoAAkntg1tpT9-4pbXBKmA_ck="}}"
-#: "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:-Sequential}Executor}"
-: "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
+: "${AIRFLOW__CORE__FERNET_KEY:=${FERNET_KEY:="rEALLY_rEALLY_bAD_eNCRYPTON_kEY"}}"
+: "${AIRFLOW__CORE__EXECUTOR:=${EXECUTOR:=Local}Executor}"
+# : "${AIRFLOW__CORE__EXECUTOR:=CeleryExecutor}"
 
 
 # Load DAGs exemples (default: Yes)
@@ -44,7 +34,7 @@ wait_for_port() {
       echo >&2 "$(date) - $host:$port still not reachable, giving up"
       exit 1
     fi
-    echo "$(date) - waiting for $name... $j/$TRY_LOOP"
+    echo "$(date) - waiting for $name-[$host:$port] ... $j/$TRY_LOOP"
     sleep 5
   done
 }
@@ -66,12 +56,12 @@ AIRFLOW__CELERY__BROKER_URL="redis://$REDIS_PREFIX$REDIS_HOST:$REDIS_PORT/1"
 AIRFLOW__CELERY__CELERY_RESULT_BACKEND="db+postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
 
 export \
+  AIRFLOW__CORE__SQL_ALCHEMY_CONN \
   AIRFLOW__CELERY__BROKER_URL \
   AIRFLOW__CELERY__CELERY_RESULT_BACKEND \
   AIRFLOW__CORE__EXECUTOR \
   AIRFLOW__CORE__FERNET_KEY \
   AIRFLOW__CORE__LOAD_EXAMPLES \
-  AIRFLOW__CORE__SQL_ALCHEMY_CONN \
 
 case "$1" in
   webserver)
@@ -81,6 +71,11 @@ case "$1" in
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     wait_for_redis
     airflow initdb
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "airflow initdb worked!!!!!!!!!"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    sleep 10
+
     python /create-user.py
     if [ "$AIRFLOW__CORE__EXECUTOR" = "SequentialExecutor" ] || [ "$AIRFLOW__CORE__EXECUTOR" = "LocalExecutor" ];
     then

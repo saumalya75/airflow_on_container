@@ -73,12 +73,12 @@ RUN set -ex \
 COPY script/create-user.py /create-user.py
 COPY script/entrypoint.sh /entrypoint.sh
 COPY config/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-COPY ./airflow_home/dags ${AIRFLOW_HOME}/dags
+# COPY ./airflow_home/dags ${AIRFLOW_HOME}/dags
 COPY ./app ${APP_HOME}/app
 COPY ./requirements.txt /requirements.txt
 
-VOLUME ${AIRFLOW_HOME}/dags
-VOLUME ${APP_HOME}/app
+# VOLUME ${AIRFLOW_HOME}/dags
+# VOLUME ${APP_HOME}/app
 
 RUN chown -R airflow: ${AIRFLOW_HOME}
 ENV CONFIG="PRODUCTION"
