@@ -1,6 +1,6 @@
 
   
-# AirflowOnAWS
+# AirflowOnContainer
 
 ### A containerised application hosting Airflow, using CeleryExecutor with Redis and Postgres.
 
@@ -20,7 +20,7 @@ Not much, just a few things:
 ## Getting the application/code:
 **Easy-peasy!**
 
-The entire project is available on my BitBucket repository  **`https://bitbucket.org/saumalya75/airflowonaws/src/master/`** can be cloned using **`git clone git@bitbucket.org:saumalya75/airflowonaws.git`**.
+The entire project is available on my BitBucket repository  **`https://bitbucket.org/saumalya75/airflowoncontainer/src/master/`** can be cloned using **`git clone git@bitbucket.org:saumalya75/airflowoncontainer.git`**.
 
 ## 3. Usage:
 #### This project focuses on launching an fully setup containerised Airflow environment. Provided codebase launches An Airflow server using Postgres database, CeleryExecutor with Redis.
