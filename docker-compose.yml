@@ -95,7 +95,53 @@ services:
             - POSTGRES_DB=${V_POSTGRES_DB}
         command: scheduler
 
-    worker:
+    worker01:
+        image: saumalya75/airflowoncontainer:1.0.0
+        restart: always
+        depends_on:
+            - scheduler
+        volumes:
+            - ./airflow_home/dags:/usr/local/airflow/dags
+            # Uncomment to include custom plugins
+            # - ./plugins:/usr/local/airflow/plugins
+        environment:
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
+            - REDIS_HOST=redis
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
+        command: worker
+
+    worker02:
+        image: saumalya75/airflowoncontainer:1.0.0
+        restart: always
+        depends_on:
+            - scheduler
+        volumes:
+            - ./airflow_home/dags:/usr/local/airflow/dags
+            # Uncomment to include custom plugins
+            # - ./plugins:/usr/local/airflow/plugins
+        environment:
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=${V_EXECUTOR}
+            - REDIS_HOST=redis
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
+        command: worker
+
+    worker03:
         image: saumalya75/airflowoncontainer:1.0.0
         restart: always
         depends_on:

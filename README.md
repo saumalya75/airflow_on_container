@@ -35,6 +35,7 @@ _Anyone can clone the code base and do there own modification on it to suit ther
 6. Create `script/create-user.py` file by copying `script/create-user-template.py` file and provide intended airflow credentials. These credentials will be required to log into Airflow WebUI.
 7. Execute _`docker-compose up`_ command in the terminal file to run the application.
 8. Open `http://0.0.0.0:8080` on your browser, login using the configured credentials from point 6.
+9. Flower Web UI, to keep track of scheduler, is available at `http://0.0.0.0:5555`.
 
 #### N.B.: Please note, base image for airflow web server, scheduler, flower and worker is available at docker hub: _`saumalya75/airflowoncontainer:1.0.0`_.
 
