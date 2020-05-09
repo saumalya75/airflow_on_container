@@ -1,0 +1,62 @@
+version: '3.7'
+services:
+    minio:
+        image: minio/minio
+        ports:
+            - "9000:9000"
+        # volumes:
+        #     - ./miniodata:/data
+        environment:
+            MINIO_ACCESS_KEY: ${V_MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${V_MINIO_SECRET_KEY}
+        command: server /data
+
+    redis:
+        image: redis:5.0.5
+        command: redis-server --requirepass ${V_REDIS_PASSWORD}
+
+    postgres:
+        image: postgres:9.6
+        environment:
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
+        # Uncomment these lines to persist data on the local filesystem.
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data/pgdata
+
+    webserver:
+        image: saumalya75/airflowoncontainer:2.0.0
+        restart: always
+        depends_on:
+            - postgres
+            - redis
+            - minio
+        environment:
+            - LOAD_EX=${V_LOAD_EX}
+            - FERNET_KEY=${V_FERNET_KEY}
+            - EXECUTOR=Local
+            - REDIS_HOST=redis
+            - REDIS_PORT=${V_REDIS_PORT}
+            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+            - POSTGRES_HOST=postgres
+            - POSTGRES_PORT=${V_POSTGRES_PORT}
+            - POSTGRES_USER=${V_POSTGRES_USER}
+            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+        volumes:
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
+        ports:
+            - "8080:8080"
+        command: webserver
+        healthcheck:
+            test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+            interval: 30s
+            timeout: 30s
+            retries: 3

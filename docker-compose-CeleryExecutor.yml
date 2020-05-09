@@ -1,9 +1,18 @@
 version: '2.1'
 services:
-    redis:
-        image: 'redis:5.0.5'
+    minio:
+        image: minio/minio
         ports:
-            - "6379:6379"
+            - "9000:9000"
+        # volumes:
+        #     - ./miniodata:/data
+        environment:
+            MINIO_ACCESS_KEY: ${V_MINIO_ACCESS_KEY}
+            MINIO_SECRET_KEY: ${V_MINIO_SECRET_KEY}
+        command: server /data
+
+    redis:
+        image: redis:5.0.5
         command: redis-server --requirepass ${V_REDIS_PASSWORD}
 
     postgres:
@@ -14,21 +23,20 @@ services:
             - POSTGRES_DB=${V_POSTGRES_DB}
         # Uncomment these lines to persist data on the local filesystem.
             - PGDATA=/var/lib/postgresql/data/pgdata
-        ports:
-            - "5432:5432"
         volumes:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowoncontainer:1.0.0
+        image: saumalya75/airflowoncontainer:2.0.0
         restart: always
         depends_on:
             - postgres
             - redis
+            - minio
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
+            - EXECUTOR=Celery
             - REDIS_HOST=redis
             - REDIS_PORT=${V_REDIS_PORT}
             - REDIS_PASSWORD=${V_REDIS_PASSWORD}
@@ -37,10 +45,13 @@ services:
             - POSTGRES_USER=${V_POSTGRES_USER}
             - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
             - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
         volumes:
-            - ./airflow_home/dags:/usr/local/airflow/dags
-            # Uncomment to include custom plugins
-            # - ./plugins:/usr/local/airflow/plugins
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
         ports:
             - "8080:8080"
         command: webserver
@@ -51,15 +62,14 @@ services:
             retries: 3
 
     flower:
-        image: saumalya75/airflowoncontainer:1.0.0
+        image: saumalya75/airflowoncontainer:2.0.0
         restart: always
         depends_on:
             - redis
-            - postgres
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
+            - EXECUTOR=Celery
             - REDIS_HOST=redis
             - REDIS_PORT=${V_REDIS_PORT}
             - REDIS_PASSWORD=${V_REDIS_PASSWORD}
@@ -68,23 +78,26 @@ services:
             - POSTGRES_USER=${V_POSTGRES_USER}
             - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
             - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+        volumes:
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
         ports:
             - "5555:5555"
         command: flower
 
     scheduler:
-        image: saumalya75/airflowoncontainer:1.0.0
+        image: saumalya75/airflowoncontainer:2.0.0
         restart: always
         depends_on:
             - webserver
-        volumes:
-            - ./airflow_home/dags:/usr/local/airflow/dags
-            # Uncomment to include custom plugins
-            # - ./plugins:/usr/local/airflow/plugins
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
+            - EXECUTOR=Celery
             - REDIS_HOST=redis
             - REDIS_PORT=${V_REDIS_PORT}
             - REDIS_PASSWORD=${V_REDIS_PASSWORD}
@@ -93,21 +106,24 @@ services:
             - POSTGRES_USER=${V_POSTGRES_USER}
             - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
             - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+        volumes:
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
         command: scheduler
 
     worker01:
-        image: saumalya75/airflowoncontainer:1.0.0
+        image: saumalya75/airflowoncontainer:2.0.0
         restart: always
         depends_on:
             - scheduler
-        volumes:
-            - ./airflow_home/dags:/usr/local/airflow/dags
-            # Uncomment to include custom plugins
-            # - ./plugins:/usr/local/airflow/plugins
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
+            - EXECUTOR=Celery
             - REDIS_HOST=redis
             - REDIS_PORT=${V_REDIS_PORT}
             - REDIS_PASSWORD=${V_REDIS_PASSWORD}
@@ -116,21 +132,24 @@ services:
             - POSTGRES_USER=${V_POSTGRES_USER}
             - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
             - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+        volumes:
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
         command: worker
 
     worker02:
-        image: saumalya75/airflowoncontainer:1.0.0
+        image: saumalya75/airflowoncontainer:2.0.0
         restart: always
         depends_on:
             - scheduler
-        volumes:
-            - ./airflow_home/dags:/usr/local/airflow/dags
-            # Uncomment to include custom plugins
-            # - ./plugins:/usr/local/airflow/plugins
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
+            - EXECUTOR=Celery
             - REDIS_HOST=redis
             - REDIS_PORT=${V_REDIS_PORT}
             - REDIS_PASSWORD=${V_REDIS_PASSWORD}
@@ -139,27 +158,37 @@ services:
             - POSTGRES_USER=${V_POSTGRES_USER}
             - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
             - POSTGRES_DB=${V_POSTGRES_DB}
+            - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+            - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+            - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+        volumes:
+            - ./airflow_home:/usr/local/airflow
+            - ./app_home:/usr/local/app
         command: worker
 
-    worker03:
-        image: saumalya75/airflowoncontainer:1.0.0
-        restart: always
-        depends_on:
-            - scheduler
-        volumes:
-            - ./airflow_home/dags:/usr/local/airflow/dags
-            # Uncomment to include custom plugins
-            # - ./plugins:/usr/local/airflow/plugins
-        environment:
-            - LOAD_EX=${V_LOAD_EX}
-            - FERNET_KEY=${V_FERNET_KEY}
-            - EXECUTOR=${V_EXECUTOR}
-            - REDIS_HOST=redis
-            - REDIS_PORT=${V_REDIS_PORT}
-            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
-            - POSTGRES_HOST=postgres
-            - POSTGRES_PORT=${V_POSTGRES_PORT}
-            - POSTGRES_USER=${V_POSTGRES_USER}
-            - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
-            - POSTGRES_DB=${V_POSTGRES_DB}
-        command: worker
+    # worker03:
+    #     image: saumalya75/airflowoncontainer:2.0.0
+    #     restart: always
+    #     depends_on:
+    #         - scheduler
+    #     environment:
+    #         - LOAD_EX=${V_LOAD_EX}
+    #         - FERNET_KEY=${V_FERNET_KEY}
+    #         - EXECUTOR=Celery
+    #         - REDIS_HOST=redis
+    #         - REDIS_PORT=${V_REDIS_PORT}
+    #         - REDIS_PASSWORD=${V_REDIS_PASSWORD}
+    #         - POSTGRES_HOST=postgres
+    #         - POSTGRES_PORT=${V_POSTGRES_PORT}
+    #         - POSTGRES_USER=${V_POSTGRES_USER}
+    #         - POSTGRES_PASSWORD=${V_POSTGRES_PASSWORD}
+    #         - POSTGRES_DB=${V_POSTGRES_DB}
+    #         - MINIO_ACCESS_KEY=${V_MINIO_ACCESS_KEY}
+    #         - MINIO_SECRET_KEY=${V_MINIO_SECRET_KEY}
+    #         - AWS_ACCESS_KEY_ID=${V_AWS_ACCESS_KEY_ID}
+    #         - AWS_SECRET_ACCESS_KEY=${V_AWS_SECRET_ACCESS_KEY}
+    #     volumes:
+    #         - ./airflow_home:/usr/local/airflow
+    #         - ./app_home:/usr/local/app
+    #     command: worker
