@@ -1,0 +1,104 @@
+{ 
+  "dag": {
+    "dag_id": "configurable_data_pipeline_demo",
+    "schedule_interval_unit": "days",
+    "schedule_interval_val": 1,
+    "default_args": {
+      "owner": "saumalya75",
+      "depends_on_past": false,
+      "start_date": {
+        "year": 2020,
+        "month": 5,
+        "day": 8
+      },
+      "email": ["digi.hogwarts.2020@gmail.com"],
+      "email_on_failure": false,
+      "email_on_retry": false,
+      "retries": 1,
+      "retry_delay_unit": "seconds",
+      "retry_delay_val": 25
+    }
+  },
+  "task_details": {
+    "accounts": [
+      {
+        "account_id": "A1",
+        "files": [
+          {
+            "file_id": "A1F1",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a1f1_trigger_",
+            "runable": true
+          },
+          {
+            "file_id": "A1F2",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a1f2_trigger_",
+            "runable": false
+          }
+        ],
+        "runable": true
+      },
+      {
+        "account_id": "A2",
+        "files": [
+          {
+            "file_id": "A2F1",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a2f1_trigger_",
+            "runable": true
+          },
+          {
+            "file_id": "A2F2",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a2f2_trigger_",
+            "runable": true
+          },
+          {
+            "file_id": "A2F3",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a2f3_trigger_",
+            "runable": true
+          }
+        ],
+        "runable": true
+      },
+      {
+        "account_id": "A3",
+        "files": [
+          {
+            "file_id": "A3F1",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a3f1_trigger_",
+            "runable": true
+          },
+          {
+            "file_id": "A3F2",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a3f2_trigger_",
+            "runable": true
+          }
+        ],
+        "runable": true
+      },
+      {
+        "account_id": "A4",
+        "files": [
+          {
+            "file_id": "A4F1",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a4f1_trigger_",
+            "runable": true
+          },
+          {
+            "file_id": "A4F2",
+            "trigger_prefix": "trigger",
+            "trigger_identifier": "a4f2_trigger_",
+            "runable": true
+          }
+        ],
+        "runable": false
+      }
+    ]
+  }
+}

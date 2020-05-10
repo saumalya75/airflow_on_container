@@ -84,6 +84,7 @@ class S3SensorFromProvidedValue(BaseSensorOperator):
             else:
                 presence = hook.check_for_key(self.identifier, self.bucket_name)
                 if presence and self.refresh_xcom:
+                    trigger_file = hook.get_wildcard_key(self.identifier, self.bucket_name).key
                     _trigger_file_to_xcom(
                         hook=hook
                         , key=trigger_file
@@ -111,6 +112,7 @@ class S3SensorFromXcom(S3SensorFromProvidedValue):
 
     @staticmethod
     def _extract_xcom_data(task_instance, xcom_task_id, xcom_key):
+        print(task_instance.xcom_pull(xcom_task_id, key=xcom_key))
         return task_instance.xcom_pull(xcom_task_id, key=xcom_key)
 
     def poke(self, context):
@@ -146,6 +148,7 @@ class S3SensorFromXcom(S3SensorFromProvidedValue):
             else:
                 presence = hook.check_for_key(self.identifier, self.bucket_name)
                 if presence and self.refresh_xcom:
+                    trigger_file = hook.get_wildcard_key(self.identifier, self.bucket_name).key
                     _trigger_file_to_xcom(
                         hook=hook
                         , key=trigger_file
