@@ -1,0 +1,5 @@
+{
+    "bucket": "airflowonaws",
+    "prefix": "source_file_bed/A2",
+    "key": "credit_file_20200510.dat"
+}

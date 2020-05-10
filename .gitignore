@@ -34,7 +34,7 @@ pgdata/*
 airflow_home/logs/*
 
 #Application data
-app_home/data/*
+# app_home/data/*
 
 #Any env or app data
 .*
