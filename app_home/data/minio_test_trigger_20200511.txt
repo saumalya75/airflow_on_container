@@ -1,0 +1,5 @@
+{
+    "bucket" : "airflowonaws",
+    "prefix" : "source_file_bed",
+    "key" : "airflowonaws_demo_source_file_20200509.dat"
+}
