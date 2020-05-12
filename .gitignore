@@ -40,3 +40,6 @@ airflow_home/logs/*
 .*
 !.env-template
 ToDo.txt
+
+# Airflow Autentication Code
+app_home/script/create-user.py
