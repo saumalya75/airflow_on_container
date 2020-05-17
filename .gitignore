@@ -42,4 +42,4 @@ airflow_home/logs/*
 ToDo.txt
 
 # Airflow Autentication Code
-app_home/script/create-user.py
+script_home/create-user.py

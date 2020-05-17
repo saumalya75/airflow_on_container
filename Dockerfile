@@ -1,8 +1,9 @@
 # VERSION 1.10.9
 # AUTHOR: Matthieu "Puckel_" Roisil
-# DESCRIPTION: Basic Airflow container
-# BUILD: docker build --rm -t puckel/docker-airflow .
-# SOURCE: https://github.com/puckel/docker-airflow
+# MODIFIER: Saumalya75
+# DESCRIPTION: Airflow container with application integration and custom plugins
+# BUILD: docker build --rm -t saumalya75/airflowoncontainer:2.0.1 .
+# SOURCE: https://bitbucket.org/saumalya75/airflowoncontainer/src/master/
 
 FROM python:3.7-slim-buster
 LABEL maintainer="saumalya75/"
@@ -50,6 +51,8 @@ RUN set -ex \
         rsync \
         netcat \
         locales \
+        unixodbc-dev \
+        python3-dev \
     && sed -i 's/^# en_US.UTF-8 UTF-8$/en_US.UTF-8 UTF-8/g' /etc/locale.gen \
     && locale-gen \
     && update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 \
@@ -73,14 +76,11 @@ RUN set -ex \
         /usr/share/doc \
         /usr/share/doc-base
 
-# COPY script/entrypoint.sh /entrypoint.sh
-# COPY config/airflow.cfg ${AIRFLOW_USER_HOME}/airflow.cfg
-
 RUN chown -R airflow: ${AIRFLOW_USER_HOME}
 
 EXPOSE 8080 5555 8793
 
 USER airflow
 WORKDIR ${AIRFLOW_USER_HOME}
-ENTRYPOINT ["/usr/local/app/script/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/script/entrypoint.sh"]
 CMD ["webserver"]
