@@ -27,7 +27,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - postgres
@@ -63,7 +63,7 @@ services:
             retries: 3
 
     flower:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - redis
@@ -92,7 +92,7 @@ services:
         command: flower
 
     scheduler:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - webserver
@@ -119,7 +119,7 @@ services:
         command: scheduler
 
     worker01:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - scheduler
@@ -146,7 +146,7 @@ services:
         command: worker
 
     worker02:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - scheduler
@@ -173,7 +173,7 @@ services:
         command: worker
 
     # worker03:
-    #     image: saumalya75/airflowoncontainer:2.0.1
+    #     image: saumalya75/airflowoncontainer:latest
     #     restart: always
     #     depends_on:
     #         - scheduler

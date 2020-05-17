@@ -63,7 +63,7 @@ _Anyone can clone the code base and do there own modification on it to suit ther
 
 5. Open `http://0.0.0.0:8080` on your browser.
 
-#### N.B.: Please note, base image for airflow web server, scheduler, flower and worker is available at docker hub: _`saumalya75/airflowoncontainer:2.0.0`_.
+#### N.B.: Please note, base image for airflow web server, scheduler, flower and worker is available at docker hub: _`saumalya75/airflowoncontainer:latest`_.
 
 ### 3.2. Behind the back:
 
