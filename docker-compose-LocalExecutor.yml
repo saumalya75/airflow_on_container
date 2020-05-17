@@ -23,7 +23,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowoncontainer:2.0.1
+        image: saumalya75/airflowoncontainer:latest
         restart: always
         depends_on:
             - postgres
