@@ -11,10 +11,6 @@ services:
             MINIO_SECRET_KEY: ${V_MINIO_SECRET_KEY}
         command: server /data
 
-    redis:
-        image: redis:5.0.5
-        command: redis-server --requirepass ${V_REDIS_PASSWORD}
-
     postgres:
         image: postgres:9.6
         environment:
@@ -27,19 +23,15 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - postgres
-            - redis
             - minio
         environment:
             - LOAD_EX=${V_LOAD_EX}
             - FERNET_KEY=${V_FERNET_KEY}
             - EXECUTOR=Local
-            - REDIS_HOST=redis
-            - REDIS_PORT=${V_REDIS_PORT}
-            - REDIS_PASSWORD=${V_REDIS_PASSWORD}
             - POSTGRES_HOST=postgres
             - POSTGRES_PORT=${V_POSTGRES_PORT}
             - POSTGRES_USER=${V_POSTGRES_USER}
@@ -52,6 +44,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         ports:
             - "8080:8080"
         command: webserver

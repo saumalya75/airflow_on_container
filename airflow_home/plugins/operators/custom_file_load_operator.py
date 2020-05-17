@@ -1,6 +1,10 @@
 from airflow.models.baseoperator import BaseOperator
 from hooks.custom_s3_minio_hook import CustomS3MinioHook
 from airflow.utils.decorators import apply_defaults
+# Demo application integration imports
+import myscript as ms
+from myscript.run import check
+from myscript import run as r
 
 
 class CustomFileProcessingOperator(BaseOperator):
@@ -38,6 +42,12 @@ class CustomFileProcessingOperator(BaseOperator):
         return task_instance.xcom_pull(xcom_task_id, key=xcom_key)
 
     def execute(self, context):
+        # Demo application integration prints
+        print("*" * 50)
+        print(check)
+        print(r.check)
+        print(ms.check)
+        print('~' * 50)
         """File processing is implemented"""
         source_hook = CustomS3MinioHook(
             conn_type=self.source_bed_type

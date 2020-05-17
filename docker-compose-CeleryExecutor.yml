@@ -27,7 +27,7 @@ services:
             - ./pgdata:/var/lib/postgresql/data/pgdata
 
     webserver:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - postgres
@@ -52,6 +52,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         ports:
             - "8080:8080"
         command: webserver
@@ -62,7 +63,7 @@ services:
             retries: 3
 
     flower:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - redis
@@ -85,12 +86,13 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         ports:
             - "5555:5555"
         command: flower
 
     scheduler:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - webserver
@@ -113,10 +115,11 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         command: scheduler
 
     worker01:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - scheduler
@@ -139,10 +142,11 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         command: worker
 
     worker02:
-        image: saumalya75/airflowoncontainer:2.0.0
+        image: saumalya75/airflowoncontainer:2.0.1
         restart: always
         depends_on:
             - scheduler
@@ -165,10 +169,11 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./script_home:/usr/local/script
         command: worker
 
     # worker03:
-    #     image: saumalya75/airflowoncontainer:2.0.0
+    #     image: saumalya75/airflowoncontainer:2.0.1
     #     restart: always
     #     depends_on:
     #         - scheduler
@@ -191,4 +196,5 @@ services:
     #     volumes:
     #         - ./airflow_home:/usr/local/airflow
     #         - ./app_home:/usr/local/app
+    #         - ./script_home:/usr/local/script
     #     command: worker
