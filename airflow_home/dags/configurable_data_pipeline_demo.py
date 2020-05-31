@@ -14,6 +14,24 @@ from datetime import datetime, timedelta
 import json, traceback, sys, os, pprint
 
 
+    
+def _say_hello(account, file_name):
+    print(f'Saying Hello from {file_name} file of {account} account!')
+
+def _get_timedelta(unit, value):
+    if unit.upper() == "DAYS":
+        return timedelta(days=value)
+    if unit.upper() == "MONTHS":
+        return timedelta(months=value)
+    if unit.upper() == "YEARS":
+        return timedelta(years=value)
+    if unit.upper() == "HOURS":
+        return timedelta(hours=value)
+    if unit.upper() == "MINUTES":
+        return timedelta(minutes=value)
+    if unit.upper() == "SECONDS":
+        return timedelta(seconds=value)
+
 try:
     CONFIG_FILE_NAME = "dag_configuration_demo.json"
     CONFIG_DB_KEY = "configurable_data_pipeline_demo_config"
@@ -21,23 +39,6 @@ try:
     config_file = Path(__file__).with_name(CONFIG_FILE_NAME)
     with config_file.open() as config_data:
         pipeline_config = json.loads(config_data.read())
-    
-    def _say_hello(account, file_name):
-        print(f'Saying Hello from {file_name} file of {account} account!')
-
-    def _get_timedelta(unit, value):
-        if unit.upper() == "DAYS":
-            return timedelta(days=value)
-        if unit.upper() == "MONTHS":
-            return timedelta(months=value)
-        if unit.upper() == "YEARS":
-            return timedelta(years=value)
-        if unit.upper() == "HOURS":
-            return timedelta(hours=value)
-        if unit.upper() == "MINUTES":
-            return timedelta(minutes=value)
-        if unit.upper() == "SECONDS":
-            return timedelta(seconds=value)
 except Exception as e:
     print("Something went wrong while reading the dag configuration: " + str(e))
     print("~" * 100)
