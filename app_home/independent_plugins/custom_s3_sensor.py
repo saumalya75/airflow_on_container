@@ -1,5 +1,5 @@
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
-from custom_s3_minio_hook import CustomS3MinioHook
+from independent_plugins.custom_s3_minio_hook import CustomS3MinioHook
 from airflow.utils.decorators import apply_defaults
 from airflow.exceptions import AirflowException
 import json, traceback, sys
