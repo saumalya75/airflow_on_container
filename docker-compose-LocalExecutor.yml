@@ -44,6 +44,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         ports:
             - "8080:8080"
