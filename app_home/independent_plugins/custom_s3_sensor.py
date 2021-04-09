@@ -1,8 +1,9 @@
 from airflow.sensors.base_sensor_operator import BaseSensorOperator
-from hooks.custom_s3_minio_hook import CustomS3MinioHook
+from custom_s3_minio_hook import CustomS3MinioHook
 from airflow.utils.decorators import apply_defaults
 from airflow.exceptions import AirflowException
 import json, traceback, sys
+
 
 def _trigger_file_to_xcom(hook, key, bucket, task_instance, task_key):
     source_file_details = hook.read_key(key, bucket)
@@ -17,6 +18,7 @@ def _trigger_file_to_xcom(hook, key, bucket, task_instance, task_key):
         print("Source file details are pushed to XCOM.")
     else:
         print("No data present in source file. Nothing to push to XCOM.")
+
 
 class CustomS3Sensor(object):
     def __new__(cls, from_xcom = False, *args, **kwargs):
@@ -100,6 +102,7 @@ class S3SensorFromProvidedValue(BaseSensorOperator):
             print(traceback.print_exc(file=sys.stdout))
             print('~' * 100)
             raise
+
 
 class S3SensorFromXcom(S3SensorFromProvidedValue):
 
