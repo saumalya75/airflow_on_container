@@ -61,6 +61,7 @@ class S3SensorFromProvidedValue(BaseSensorOperator):
                 This sensor reads the trigger file.
                 It also puts the values provided in trigger file on xcomm.
             """
+            print("Now we are inside independent plugins.")
             task_instance = context['task_instance']
             hook = CustomS3MinioHook(conn_type=self.conn_type, endpoint_url=self.endpoint_url, aws_conn_id=self.aws_conn_id, verify=self.verify)
             print(f"Connection Type: {self.conn_type}")
@@ -121,6 +122,7 @@ class S3SensorFromXcom(S3SensorFromProvidedValue):
                 This sensor reads the trigger file.
                 It also puts the values provided in trigger file on xcomm.
             """
+            print("Now we are inside independent plugins.")
             task_instance = context['task_instance']
             self.bucket_name = self._extract_xcom_data(task_instance, self.xcom_task_id, self.xcom_key + "__bucket")
             self.identifier = self._extract_xcom_data(task_instance, self.xcom_task_id, self.xcom_key + "__prefix") \

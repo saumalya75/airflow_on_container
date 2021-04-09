@@ -12,7 +12,7 @@ services:
         command: server /data
 
     redis:
-        image: redis:5.0.5
+        image: redis:latest
         command: redis-server --requirepass ${V_REDIS_PASSWORD}
 
     postgres:
