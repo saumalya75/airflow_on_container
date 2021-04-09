@@ -4,8 +4,9 @@ http://airflow.readthedocs.org/en/latest/tutorial.html
 """
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
-from airflow.sensors import CustomS3Sensor
-from airflow.operators import CustomFileProcessingOperator
+# from airflow.sensors import CustomS3Sensor
+from independent_plugins.custom_s3_sensor import CustomS3Sensor
+from independent_plugins.custom_file_load_operator import CustomFileProcessingOperator
 from datetime import datetime, timedelta
 
 run_id = datetime.now().strftime('%Y%m%d%H%M%S')

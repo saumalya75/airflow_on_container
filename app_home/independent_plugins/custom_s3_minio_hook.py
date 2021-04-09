@@ -17,6 +17,7 @@ class S3Creds(object):
         except Exception as e:
             raise AirflowException("Error while instantiating S3Creds object: " + str(e))
 
+
 def _get_credentials_from_env(conn_type):
     try:
         if conn_type.upper() == 'MINIO':
