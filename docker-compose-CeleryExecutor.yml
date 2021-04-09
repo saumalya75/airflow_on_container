@@ -52,6 +52,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         ports:
             - "8080:8080"
@@ -86,6 +87,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         ports:
             - "5555:5555"
@@ -115,6 +117,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         command: scheduler
 
@@ -142,6 +145,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         command: worker
 
@@ -169,6 +173,7 @@ services:
         volumes:
             - ./airflow_home:/usr/local/airflow
             - ./app_home:/usr/local/app
+            - ./app_home/independent_plugins:/usr/local/airflow/dags/independent_plugins
             - ./script_home:/usr/local/script
         command: worker
 
