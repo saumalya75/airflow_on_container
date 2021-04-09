@@ -1,5 +1,5 @@
 from airflow.models.baseoperator import BaseOperator
-from hooks.custom_s3_minio_hook import CustomS3MinioHook
+from independent_plugins.custom_s3_minio_hook import CustomS3MinioHook
 from airflow.utils.decorators import apply_defaults
 # Demo application integration imports
 import myscript as ms
